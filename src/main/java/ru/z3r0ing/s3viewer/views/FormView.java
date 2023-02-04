@@ -14,7 +14,7 @@ import ru.z3r0ing.s3viewer.dto.S3Credentials;
 import ru.z3r0ing.s3viewer.service.S3Service;
 
 @PageTitle("Check S3 Connection")
-@Route
+@Route("/")
 public class FormView extends VerticalLayout {
 
     private final S3Service s3Service;
