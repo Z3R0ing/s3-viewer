@@ -20,6 +20,7 @@ public class S3ServiceImpl implements S3Service {
 
     @Override
     public boolean setS3Credentials(S3Credentials s3Credentials) {
+        this.currentS3Client = null;
         this.s3Credentials = s3Credentials;
         return checkConnection();
     }

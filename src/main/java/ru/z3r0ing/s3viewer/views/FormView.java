@@ -2,7 +2,6 @@ package ru.z3r0ing.s3viewer.views;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -24,7 +23,7 @@ public class FormView extends VerticalLayout {
     private final TextField regionNameField;
     private final TextField endpointUrlField;
     /*private final TextField bucketField;*/
-    private final Checkbox pathStyleAccessCheckbox;
+    /*private final Checkbox pathStyleAccessCheckbox;*/
     private final Button checkConnectionBtn;
 
     public FormView(S3Service s3Service) {
@@ -64,9 +63,9 @@ public class FormView extends VerticalLayout {
         bucketField.setRequired(true);
         formLayout.add(bucketField);*/
 
-        pathStyleAccessCheckbox = new Checkbox();
+        /*pathStyleAccessCheckbox = new Checkbox();
         pathStyleAccessCheckbox.setLabel("Path style access");
-        formLayout.add(pathStyleAccessCheckbox);
+        formLayout.add(pathStyleAccessCheckbox);*/
 
         checkConnectionBtn = new Button("Check connection");
         checkConnectionBtn.addClickListener(e -> {
@@ -82,12 +81,15 @@ public class FormView extends VerticalLayout {
     }
 
     private S3Credentials getS3Credentials() {
-        return new S3Credentials(accessKeyField.getValue(),
+        return new S3Credentials(
+                accessKeyField.getValue(),
                 secretAccessKeyField.getValue(),
                 regionNameField.getValue(),
                 endpointUrlField.getValue(),
                 //bucketField.getValue(),
                 "",
-                pathStyleAccessCheckbox.getValue());
+                //pathStyleAccessCheckbox.getValue()
+                false
+        );
     }
 }
