@@ -2,16 +2,21 @@ package ru.z3r0ing.s3viewer.views;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import lombok.extern.slf4j.Slf4j;
 import ru.z3r0ing.s3viewer.dto.S3Credentials;
 import ru.z3r0ing.s3viewer.service.S3Service;
 
+@Slf4j
 @PageTitle("Check S3 Connection")
 @Route("/")
 public class FormView extends VerticalLayout {
@@ -22,9 +27,10 @@ public class FormView extends VerticalLayout {
     private final PasswordField secretAccessKeyField;
     private final TextField regionNameField;
     private final TextField endpointUrlField;
-    /*private final TextField bucketField;*/
-    /*private final Checkbox pathStyleAccessCheckbox;*/
+    private final TextField bucketField;
+    private final Checkbox pathStyleAccessCheckbox;
     private final Button checkConnectionBtn;
+    private final Button openBrowserBtn;
 
     public FormView(S3Service s3Service) {
 
@@ -57,27 +63,36 @@ public class FormView extends VerticalLayout {
         endpointUrlField.setPlaceholder("Endpoint URL");
         formLayout.add(endpointUrlField);
 
-        /*bucketField = new TextField();
+        bucketField = new TextField();
         bucketField.setLabel("Bucket");
         bucketField.setPlaceholder("Bucket");
         bucketField.setRequired(true);
-        formLayout.add(bucketField);*/
+        formLayout.add(bucketField);
 
-        /*pathStyleAccessCheckbox = new Checkbox();
+        pathStyleAccessCheckbox = new Checkbox();
         pathStyleAccessCheckbox.setLabel("Path style access");
-        formLayout.add(pathStyleAccessCheckbox);*/
+        formLayout.add(pathStyleAccessCheckbox);
 
         checkConnectionBtn = new Button("Check connection");
         checkConnectionBtn.addClickListener(e -> {
             Notification.show(s3Service.setS3Credentials(getS3Credentials()) ? "GOOD" : "BAD",
                     5000, Notification.Position.MIDDLE);
         });
-        checkConnectionBtn.addClickShortcut(Key.ENTER);
         formLayout.add(checkConnectionBtn);
+
+        openBrowserBtn = new Button("Browse");
+        openBrowserBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        openBrowserBtn.addClickListener(e -> {
+            getUI().get().navigate(BrowserView.class);
+        });
+        openBrowserBtn.addClickShortcut(Key.ENTER);
+        formLayout.add(openBrowserBtn);
 
         formLayout.setWidth("600px");
         setAlignSelf(Alignment.CENTER, formLayout);
         add(formLayout);
+
+        log.info(VaadinIcon.FILE.create().getStyle().get("width"));
     }
 
     private S3Credentials getS3Credentials() {
@@ -86,10 +101,8 @@ public class FormView extends VerticalLayout {
                 secretAccessKeyField.getValue(),
                 regionNameField.getValue(),
                 endpointUrlField.getValue(),
-                //bucketField.getValue(),
-                "",
-                //pathStyleAccessCheckbox.getValue()
-                false
+                bucketField.getValue(),
+                pathStyleAccessCheckbox.getValue()
         );
     }
 }
